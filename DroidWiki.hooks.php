@@ -1,5 +1,6 @@
 <?php
 class DroidWikiHooks {
+	private static $adAlreadyAdded = false;
 	/**
 	 * SkinTemplateOutputPageBeforeExec hook handler. Adds ad to Vector skin.
 	 *
@@ -9,8 +10,13 @@ class DroidWikiHooks {
 	public static function onSkinTemplateOutputPageBeforeExec(
 		SkinTemplate &$sk, QuickTemplate &$tpl
 	) {
-		if ( $sk->getSkinName() === 'vector' && self::checkShowAd( false, $sk, $tpl ) ) {
+		if (
+			!self::$adAlreadyAdded &&
+			$sk->getSkinName() === 'vector' &&
+			self::checkShowAd( $sk )
+		) {
 			$out = $sk->getOutput();
+			self::$adAlreadyAdded = true;
 			$adContent = Html::openElement(
 					'aside',
 					array(
@@ -56,34 +62,19 @@ class DroidWikiHooks {
 	 * only true, if the user is logged out.
 	 * @return boolean
 	 */
-	private static function checkShowAd( $showtologin = false, SkinTemplate $sk, BaseTemplate $tpl ) {
+	private static function checkShowAd( SkinTemplate $sk ) {
 		global $wgNoAdSites;
 		$loginshow = false;
-		if ( $showtologin && $tpl->data['loggedin'] ) {
-			$loginshow = true;
-			if ( !empty( $tpl->data['showadlogin'] ) ) {
-				return $tpl->data['showadlogin'];
-			}
-		}
-		if ( !$showtologin && !$tpl->data['loggedin'] ) {
-			$loginshow = true;
-			if ( !empty( $tpl->data['showad'] ) ) {
-				return $tpl->data['showad'];
-			}
-		}
+		$loggedIn = $sk->getUser()->isLoggedIn();
 		// get the URL title (don't use title object, the configuration $wgNoAdSites
 		// in LocalSettings specifies url title
 		$urltitle = $sk->getRequest()->getText( 'title' );
-		if ( !in_array( $urltitle, $wgNoAdSites ) && $loginshow ) {
-			if ( $showtologin && $tpl->data['loggedin'] ) {
-				$tpl->data['showadlogin'] = true;
-			}
-			if ( !$showtologin && !$tpl->data['loggedin'] ) {
-				$tpl->data['showad'] = true;
-			}
+		if (
+			!$loggedIn &&
+			!in_array( $urltitle, $wgNoAdSites )
+		) {
 			return true;
 		}
-
 		return false;
 	}
 
@@ -94,7 +85,7 @@ class DroidWikiHooks {
 	 * @param SkinTemplate $sk
 	 */
 	public static function onBeforePageDisplay( OutputPage $out, Skin $sk ) {
-		if ( $sk->getSkinName() === 'vector' ) {
+		if ( $sk->getSkinName() === 'vector' && self::checkShowAd( $sk ) ) {
 			$out->addModules( 'ext.DroidWiki.adstyle' );
 		}
 	}
