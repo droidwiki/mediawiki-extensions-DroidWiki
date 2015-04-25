@@ -88,5 +88,10 @@ class DroidWikiHooks {
 		if ( $sk->getSkinName() === 'vector' && self::checkShowAd( $sk ) ) {
 			$out->addModules( 'ext.DroidWiki.adstyle' );
 		}
+		$out->addModules(
+			array(
+				'ext.DroidWiki.articleFeedback',
+			)
+		);
 	}
 }

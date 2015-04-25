@@ -36,6 +36,7 @@ $wgExtensionCredits['other'][] = array(
 	'license-name' => "MIT",
 );
 
+require_once __DIR__ . '/resources/Resources.php';
 // Autoload Classes
 $wgAutoloadClasses[ 'DroidWikiHooks' ] = __DIR__ . '/DroidWiki.hooks.php';
 
@@ -43,15 +44,3 @@ $wgAutoloadClasses[ 'DroidWikiHooks' ] = __DIR__ . '/DroidWiki.hooks.php';
 $wgHooks['SkinTemplateOutputPageBeforeExec'][] =
 	'DroidWikiHooks::onSkinTemplateOutputPageBeforeExec';
 $wgHooks['BeforePageDisplay'][] = 'DroidWikiHooks::onBeforePageDisplay';
-
-// ResourceLoader modules
-// path template
-$wgDWResourcePath = array(
-	'localBasePath' => __DIR__,
-	'remoteExtPath' => 'DroidWiki'
-);
-
-$wgResourceModules['ext.DroidWiki.adstyle'] = $wgDWResourcePath + array(
-	'styles' => array( 'style/droidwikiVectorAdStyle.less' ),
-	'position' => 'top',
-);
