@@ -2,7 +2,7 @@
 // path template
 $wgDWResourcePath = array(
 	'localBasePath' => __DIR__,
-	'remoteExtPath' => 'DroidWiki'
+	'remoteExtPath' => 'DroidWiki/resources'
 );
 
 $wgResourceModules += array(
