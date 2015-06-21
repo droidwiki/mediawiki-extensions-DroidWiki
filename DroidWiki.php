@@ -44,3 +44,4 @@ $wgAutoloadClasses[ 'DroidWikiHooks' ] = __DIR__ . '/DroidWiki.hooks.php';
 $wgHooks['SkinTemplateOutputPageBeforeExec'][] =
 	'DroidWikiHooks::onSkinTemplateOutputPageBeforeExec';
 $wgHooks['BeforePageDisplay'][] = 'DroidWikiHooks::onBeforePageDisplay';
+$wgHooks['SkinAfterContent'][] = 'DroidWikiHooks::onSkinAfterContent';

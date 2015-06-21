@@ -53,6 +53,41 @@ class DroidWikiHooks {
 	}
 
 	/**
+	 *
+	 */
+	public static function onSkinAfterContent( &$data, Skin $sk ) {
+		$data = Html::openElement(
+					'div',
+					array(
+						'class' => 'adsbygoogleCategory'
+					)
+				) .
+				Html::element(
+					'script',
+					array(
+						'async',
+						'src' => '//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js',
+					)
+				) .
+				Html::openElement(
+					'ins',
+					array(
+						'class' => 'adsbygoogle',
+						'style' => 'display:block',
+						'data-ad-client' => 'ca-pub-4622825295514928',
+						'data-ad-slot' => '6216454699',
+						'data-ad-format' => 'auto',
+					)
+				) .
+				Html::openElement(
+					'script'
+				) .
+				'(adsbygoogle = window.adsbygoogle || []).push({});' .
+				Html::closeElement( 'script' ) .
+				Html::closeElement( 'div' );
+	}
+
+	/**
 	 * Checks whether it's allowed to show advertising banners on this page.
 	 * The check includes the actual login state of the user and the actual site requested.
 	 * You can disallow the display of ads on specific pages using the $wgNoAdSites array in
@@ -71,6 +106,7 @@ class DroidWikiHooks {
 		$urltitle = $sk->getRequest()->getText( 'title' );
 		if (
 			!$loggedIn &&
+			$wgNoAdSites &&
 			!in_array( $urltitle, $wgNoAdSites )
 		) {
 			return true;
@@ -85,13 +121,13 @@ class DroidWikiHooks {
 	 * @param SkinTemplate $sk
 	 */
 	public static function onBeforePageDisplay( OutputPage $out, Skin $sk ) {
-		if ( $sk->getSkinName() === 'vector' && self::checkShowAd( $sk ) ) {
-			$out->addModules( 'ext.DroidWiki.adstyle' );
-		}
-		$out->addModules(
-			array(
-				'ext.DroidWiki.articleFeedback',
-			)
+		$modules = array(
+			'ext.DroidWiki.articleFeedback',
+			'ext.DroidWiki.adstyle.category'
 		);
+		if ( $sk->getSkinName() === 'vector' && self::checkShowAd( $sk ) ) {
+			$modules[] = 'ext.DroidWiki.adstyle';
+		}
+		$out->addModules( $modules );
 	}
 }
