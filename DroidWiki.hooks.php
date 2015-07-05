@@ -56,6 +56,10 @@ class DroidWikiHooks {
 	 *
 	 */
 	public static function onSkinAfterContent( &$data, Skin $sk ) {
+		if ( !$sk->getOutput()->isArticleRelated() ) {
+			return;
+		}
+
 		$data = Html::openElement(
 					'div',
 					array(
