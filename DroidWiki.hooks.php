@@ -40,6 +40,7 @@ class DroidWikiHooks {
 						'data-ad-slot' => '8031689899',
 					)
 				) .
+				Html::closeElement( 'ins' ) .
 				Html::openElement(
 					'script'
 				) .
@@ -83,6 +84,7 @@ class DroidWikiHooks {
 						'data-ad-format' => 'auto',
 					)
 				) .
+				Html::closeElement( 'ins' ) .
 				Html::openElement(
 					'script'
 				) .
