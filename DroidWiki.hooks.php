@@ -13,7 +13,7 @@ class DroidWikiHooks {
 		if (
 			!self::$adAlreadyAdded &&
 			$sk->getSkinName() === 'vector' &&
-			self::checkShowAd( $sk )
+			self::checkShowAd( $sk, 'right' )
 		) {
 			$out = $sk->getOutput();
 			self::$adAlreadyAdded = true;
@@ -57,7 +57,7 @@ class DroidWikiHooks {
 	 *
 	 */
 	public static function onSkinAfterContent( &$data, Skin $sk ) {
-		if ( !$sk->getOutput()->isArticleRelated() ) {
+		if ( !self::checkShowAd( $sk, 'bottom' ) ) {
 			return;
 		}
 
@@ -103,7 +103,7 @@ class DroidWikiHooks {
 	 * only true, if the user is logged out.
 	 * @return boolean
 	 */
-	private static function checkShowAd( SkinTemplate $sk ) {
+	private static function checkShowAd( SkinTemplate $sk, $position = 'right' ) {
 		global $wgNoAdSites;
 		$loginshow = false;
 		$loggedIn = $sk->getUser()->isLoggedIn();
@@ -111,11 +111,18 @@ class DroidWikiHooks {
 		// in LocalSettings specifies url title
 		$urltitle = $sk->getRequest()->getText( 'title' );
 		if (
-			!$loggedIn &&
 			$wgNoAdSites &&
-			!in_array( $urltitle, $wgNoAdSites )
+			!in_array( $urltitle, $wgNoAdSites ) &&
+			$sk->getOutput()->isArticleRelated()
 		) {
-			return true;
+			switch ( $position ) {
+				case 'right':
+					return Action::getActionName( $this ) === 'view' && !$loggedIn;
+					break;
+				case 'bottom':
+					return $loggedIn;
+					break;
+			}
 		}
 		return false;
 	}
