@@ -117,7 +117,7 @@ class DroidWikiHooks {
 		) {
 			switch ( $position ) {
 				case 'right':
-					return Action::getActionName( $this ) === 'view' && !$loggedIn;
+					return !$loggedIn;
 					break;
 				case 'bottom':
 					return $loggedIn;
