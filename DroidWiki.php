@@ -45,3 +45,4 @@ $wgHooks['SkinTemplateOutputPageBeforeExec'][] =
 	'DroidWikiHooks::onSkinTemplateOutputPageBeforeExec';
 $wgHooks['BeforePageDisplay'][] = 'DroidWikiHooks::onBeforePageDisplay';
 $wgHooks['SkinAfterContent'][] = 'DroidWikiHooks::onSkinAfterContent';
+$wgHooks['SoftwareInfo'][] = 'DroidWikiHooks::onGetSoftwareInfo';

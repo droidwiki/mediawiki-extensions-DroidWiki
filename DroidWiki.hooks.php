@@ -143,4 +143,13 @@ class DroidWikiHooks {
 		}
 		$out->addModules( $modules );
 	}
+
+	public static function onGetSoftwareInfo() {
+		$gitHash = SpecialVersion::getGitHeadSha1( '$IP/specialsources/mw-config' );
+		$software['[http://git.go2tech.de/summary/?r=droidwiki/operations/mediawiki-config.git MWC]'] =
+			'[http://git.go2tech.de/commit/?r=droidwiki-operations-mediawiki-config.git&h=' .
+			$gitHash .
+			' ' .
+			substr( $gitHash, 0, 7 ) . ']';
+	}
 }
