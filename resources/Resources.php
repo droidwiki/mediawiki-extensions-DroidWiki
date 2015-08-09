@@ -20,4 +20,8 @@ $wgResourceModules += array(
 		'scripts' => array( 'ext.DroidWiki.articleFeedback/fixArticleFeedback.js' ),
 		'position' => 'top',
 	),
+	'ext.DroidWiki.mainpage.styles' => $wgDWResourcePath + array(
+		'styles' => array( 'ext.DroidWiki.mainpage.styles/style.less' ),
+		'position' => 'top',
+	),
 );

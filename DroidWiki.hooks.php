@@ -142,6 +142,12 @@ class DroidWikiHooks {
 			$modules[] = 'ext.DroidWiki.adstyle';
 		}
 		$out->addModules( $modules );
+
+		// main page adjustments
+		if ( $out->getTitle()->isMainPage() ) {
+			$out->addModuleStyles( 'ext.DroidWiki.mainpage.styles' );
+		}
+
 	}
 
 	public static function onGetSoftwareInfo( &$software ) {
