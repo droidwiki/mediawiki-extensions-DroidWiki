@@ -162,4 +162,23 @@ class DroidWikiHooks {
 				substr( $gitHash, 0, 7 ) . ']';
 		}
 	}
+
+	/**
+	 * RequestContextCreateSkin hook handler
+	 * @see https://www.mediawiki.org/wiki/Manual:Hooks/RequestContextCreateSkin
+	 *
+	 * @param IContextSource $context
+	 * @param Skin $skin
+	 * @return bool
+	 */
+	public static function onRequestContextCreateSkin( $context, &$skin ) {
+		// FIXME: Temporary variables, will be deprecated in core in the future
+		global $wgHTMLFormAllowTableFormat, $wgUseMediaWikiUIEverywhere;
+
+		if ( $context->getTitle()->isMainPage() ) {
+			// Turn on MediaWiki UI styles, needed for a better look of Inputbox
+			// FIXME: Remove when this becomes the default.
+			$wgUseMediaWikiUIEverywhere = true;
+		}
+	}
 }
