@@ -153,13 +153,13 @@ class DroidWikiHooks {
 	public static function onGetSoftwareInfo( &$software ) {
 		global $IP;
 
-		$gitHash = SpecialVersion::getGitHeadSha1( "$IP/specialsources/mw-config" );
-		if ( $gitHash ) {
+		$gitInfo = new GitInfo( "$IP/specialsources/mw-config" );
+		if ( $gitInfo ) {
 			$software['[http://git.go2tech.de/summary/?r=droidwiki/operations/mediawiki-config.git MWC]'] =
-				'[http://git.go2tech.de/commit/?r=droidwiki/operations/mediawiki-config.git&h=' .
-				$gitHash .
+				'[' .
+				$gitInfo->getHeadViewUrl() .
 				' ' .
-				substr( $gitHash, 0, 7 ) . ']';
+				substr( $gitInfo->getHeadSHA1(), 0, 7 ) . ']';
 		}
 	}
 
