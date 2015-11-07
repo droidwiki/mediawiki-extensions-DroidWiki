@@ -153,7 +153,7 @@ class DroidWikiHooks {
 	public static function onGetSoftwareInfo( &$software ) {
 		global $IP;
 
-		$gitInfo = new GitInfo( "$IP/specialsources/mw-config" );
+		$gitInfo = new GitInfo( "$IP/../mw-config/mw-config" );
 		if ( $gitInfo ) {
 			$software['[http://git.go2tech.de/?p=droidwiki%2Foperations%2Fmediawiki-config.git MWC]'] =
 				'[' .
