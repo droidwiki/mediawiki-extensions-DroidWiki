@@ -40,6 +40,8 @@ require_once __DIR__ . '/resources/Resources.php';
 // Autoload Classes
 $wgAutoloadClasses[ 'DroidWikiHooks' ] = __DIR__ . '/DroidWiki.hooks.php';
 
+$wgMessagesDirs['DroidWiki'] = __DIR__ . '/i18n';
+
 // Hooks
 $wgHooks['SkinTemplateOutputPageBeforeExec'][] =
 	'DroidWikiHooks::onSkinTemplateOutputPageBeforeExec';
@@ -47,3 +49,4 @@ $wgHooks['BeforePageDisplay'][] = 'DroidWikiHooks::onBeforePageDisplay';
 $wgHooks['SkinAfterContent'][] = 'DroidWikiHooks::onSkinAfterContent';
 $wgHooks['SoftwareInfo'][] = 'DroidWikiHooks::onGetSoftwareInfo';
 $wgHooks['RequestContextCreateSkin'][] = 'DroidWikiHooks::onRequestContextCreateSkin';
+$wgHooks['SkinCopyrightFooter'][] = 'DroidWikiHooks::onSkinCopyrightFooter';

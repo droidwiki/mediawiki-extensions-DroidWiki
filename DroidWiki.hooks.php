@@ -181,4 +181,26 @@ class DroidWikiHooks {
 			$wgUseMediaWikiUIEverywhere = true;
 		}
 	}
+
+	/**
+	 * Override the copyright message with a nicer one.
+	 *
+	 * @param Title $title
+	 * @param string $type
+	 * @param string $msg
+	 * @param $link
+	 *
+	 * @return bool
+	 */
+	public static function onSkinCopyrightFooter( $title, $type, &$msg, &$link ) {
+		global $wgRightsUrl;
+
+		if( strpos( $wgRightsUrl, 'creativecommons.org/licenses/by-sa/3.0' ) !== false ) {
+			if ( $type !== 'history' ) {
+				$msg = 'droidwiki-copyright';
+			}
+		}
+
+		return true;
+	}
 }
