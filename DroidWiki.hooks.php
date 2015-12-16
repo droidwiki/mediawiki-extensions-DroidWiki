@@ -203,4 +203,18 @@ class DroidWikiHooks {
 
 		return true;
 	}
+
+	/**
+	 * PageContentLanguage hook handler. Changes the langugae object to the correct one.
+	 *
+	 * @param Title $title
+	 * @param Language &$pageLang
+	 * @param Language $userLang
+	 */
+	public static function onPageContentLanguage( Title $title, Language &$pageLang, $userLang  ) {
+		// FIXME: temporary hack for T121666, this shouldn't be needed
+		if ( strpos( $title->getText(), 'Android Training/' ) != -1 ) {
+			$pageLang = $title->getPageLanguage();
+		}
+	}
 }
