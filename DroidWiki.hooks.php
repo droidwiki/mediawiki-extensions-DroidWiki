@@ -104,7 +104,8 @@ class DroidWikiHooks {
 	 * @return boolean
 	 */
 	private static function checkShowAd( SkinTemplate $sk, $position = 'right' ) {
-		global $wgNoAdSites;
+		global $wgNoAdSites, $wgDroidWikiAdDisallowedNamespaces;
+
 		$loginshow = false;
 		$loggedIn = $sk->getUser()->isLoggedIn();
 		// get the URL title (don't use title object, the configuration $wgNoAdSites
@@ -113,6 +114,7 @@ class DroidWikiHooks {
 		if (
 			$wgNoAdSites &&
 			!in_array( $urltitle, $wgNoAdSites ) &&
+			!in_array( $sk->getTitle()->getNamespace(), $wgDroidWikiAdDisallowedNamespaces ) &&
 			$sk->getOutput()->isArticleRelated()
 		) {
 			switch ( $position ) {
