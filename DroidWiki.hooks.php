@@ -215,7 +215,7 @@ class DroidWikiHooks {
 	 */
 	public static function onPageContentLanguage( Title $title, Language &$pageLang, $userLang  ) {
 		// FIXME: temporary hack for T121666, this shouldn't be needed
-		if ( strpos( $title->getText(), 'Android Training/' ) != -1 ) {
+		if ( strpos( $title->getText(), 'Android Training/' ) !== false ) {
 			$pageLang = wfGetLangObj( 'en' );
 		}
 	}
