@@ -50,6 +50,23 @@ class DroidWikiHooks {
 
 			$out->mBodytext = $adContent . $out->mBodytext;
 		}
+
+		$devDestination = Skin::makeInternalOrExternalUrl( $skin->msg( 'droidwiki-developers-url' )->inContentLanguage()->text() );
+		$devLink = Html::element(
+			'a',
+			array( 'href' => $devDestination ),
+			$skin->msg( 'droidwiki-developers' )->text()
+		);
+		$template->set( 'developers', $devLink );
+		$template->data['footerlinks']['places'][] = 'developers';
+		$cookieDestination = Skin::makeInternalOrExternalUrl( $skin->msg( 'droidwiki-imprint-url' )->inContentLanguage()->text() );
+		$cookieLink = Html::element(
+			'a',
+			array( 'href' => $cookieDestination ),
+			$skin->msg( 'droidwiki-imprint' )->text()
+		);
+		$template->set( 'imprint', $cookieLink );
+		$template->data['footerlinks']['places'][] = 'imprint';
 		return true;
 	}
 
