@@ -78,12 +78,17 @@ class DroidWikiHooks {
 			return;
 		}
 
-		$data = Html::openElement(
-					'div',
-					array(
-						'class' => 'adsbygoogleCategory'
-					)
-				) .
+		$lockedPages = array(
+			SpecialPage::getTitleFor( 'MobileDiff' )->getRootText()
+		);
+		// this is the mobile web ad block
+		if (
+			ExtensionRegistry::getInstance()->isLoaded( 'MobileFrontend' ) &&
+			MobileContext::singleton()->shouldDisplayMobileView() &&
+			!in_array( $sk->getTitle()->getRootText(), $lockedPages )
+		) {
+			$sk->getOutput()->addHTML(
+				Html::openElement( 'div', [ 'id' => 'ad-cat', 'class' => 'adsbygoogleCategory' ] ) .
 				Html::element(
 					'script',
 					array(
@@ -97,8 +102,8 @@ class DroidWikiHooks {
 						'class' => 'adsbygoogle',
 						'style' => 'display:block',
 						'data-ad-client' => 'ca-pub-4622825295514928',
-						'data-ad-slot' => '6216454699',
-						'data-ad-format' => 'auto',
+						'data-ad-slot' => '6645983899',
+						'data-ad-format' => 'horizontal',
 					)
 				) .
 				Html::closeElement( 'ins' ) .
@@ -107,7 +112,41 @@ class DroidWikiHooks {
 				) .
 				'(adsbygoogle = window.adsbygoogle || []).push({});' .
 				Html::closeElement( 'script' ) .
-				Html::closeElement( 'div' );
+			    Html::closeElement( 'div' )
+			);
+		} else {
+			// the desktop ad block is slightly different
+			$data = Html::openElement(
+					'div',
+					array(
+						'class' => 'adsbygoogleCategory'
+					)
+				) .
+			        Html::element(
+				        'script',
+				        array(
+					        'async',
+					        'src' => '//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js',
+				        )
+			        ) .
+			        Html::openElement(
+				        'ins',
+				        array(
+					        'class' => 'adsbygoogle',
+					        'style' => 'display:block',
+					        'data-ad-client' => 'ca-pub-4622825295514928',
+					        'data-ad-slot' => '6216454699',
+					        'data-ad-format' => 'auto',
+				        )
+			        ) .
+			        Html::closeElement( 'ins' ) .
+			        Html::openElement(
+				        'script'
+			        ) .
+			        '(adsbygoogle = window.adsbygoogle || []).push({});' .
+			        Html::closeElement( 'script' ) .
+			        Html::closeElement( 'div' );
+		}
 	}
 
 	/**
@@ -123,7 +162,6 @@ class DroidWikiHooks {
 	private static function checkShowAd( SkinTemplate $sk, $position = 'right' ) {
 		global $wgNoAdSites, $wgDroidWikiAdDisallowedNamespaces;
 
-		$loginshow = false;
 		$loggedIn = $sk->getUser()->isLoggedIn();
 		// get the URL title (don't use title object, the configuration $wgNoAdSites
 		// in LocalSettings specifies url title
@@ -167,6 +205,20 @@ class DroidWikiHooks {
 			$out->addModuleStyles( 'ext.DroidWiki.mainpage.styles' );
 		}
 
+		if (
+			ExtensionRegistry::getInstance()->isLoaded( 'MobileFrontend' ) &&
+			MobileContext::singleton()->shouldDisplayMobileView()
+		) {
+			$out->addHeadItem( 'google_ad_sitelevel',
+				'<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>' );
+			$out->addHeadItem( 'google_ad_sitelevel_config',
+			'<script>
+			(adsbygoogle = window.adsbygoogle || []).push({
+				google_ad_client: "ca-pub-4622825295514928",
+				enable_page_level_ads: true
+			});
+			</script>' );
+		}
 	}
 
 	public static function onGetSoftwareInfo( &$software ) {
