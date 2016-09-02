@@ -154,7 +154,6 @@ class DroidWikiHooks {
 	 */
 	public static function onBeforePageDisplay( OutputPage $out, Skin $sk ) {
 		$modules = array(
-			'ext.DroidWiki.articleFeedback',
 			'ext.DroidWiki.adstyle.category'
 		);
 		if ( $sk->getSkinName() === 'vector' && self::checkShowAd( $sk ) ) {

@@ -15,11 +15,6 @@ $wgResourceModules += array(
 		'styles' => array( 'ext.DroidWiki.adstyle.category/droidwikiVectorAdStyleCategory.less' ),
 		'position' => 'top',
 	),
-
-	'ext.DroidWiki.articleFeedback' => $wgDWResourcePath + array(
-		'scripts' => array( 'ext.DroidWiki.articleFeedback/fixArticleFeedback.js' ),
-		'position' => 'top',
-	),
 	'ext.DroidWiki.mainpage.styles' => $wgDWResourcePath + array(
 		'styles' => array( 'ext.DroidWiki.mainpage.styles/style.less' ),
 		'position' => 'top',
