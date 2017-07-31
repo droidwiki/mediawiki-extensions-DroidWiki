@@ -51,3 +51,4 @@ $wgHooks['SoftwareInfo'][] = 'DroidWikiHooks::onGetSoftwareInfo';
 $wgHooks['RequestContextCreateSkin'][] = 'DroidWikiHooks::onRequestContextCreateSkin';
 $wgHooks['SkinCopyrightFooter'][] = 'DroidWikiHooks::onSkinCopyrightFooter';
 $wgHooks['PageContentLanguage'][] = 'DroidWikiHooks::onPageContentLanguage';
+$wgHooks['SkinTemplateGetLanguageLink'][] = 'DroidWikiHooks::onSkinTemplateGetLanguageLink';

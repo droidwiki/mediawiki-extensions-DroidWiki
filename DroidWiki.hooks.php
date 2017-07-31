@@ -287,4 +287,17 @@ class DroidWikiHooks {
 			$pageLang = wfGetLangObj( 'en' );
 		}
 	}
+
+	/**
+	 * SkinTemplateGetLanguageLink hook handler, which adds the interwiki-www css class to the interwiki-de interlanguage link,
+	 * which should indicate to the ContentTranslation extension, that the main droidwiki language (german, with interwiki link
+	 * de but mapped to www for ContentTranslation) is already translated.
+	 */
+	public static function onSkinTemplateGetLanguageLink( &$languageLink, $languageLinkTitle, Title $title, OutputPage $out ) {
+		if ( strpos( $languageLink['class'],  'interwiki-de' ) === -1 ) {
+			return;
+		}
+
+		$languageLink['class'] .= ' interwiki-www';
+	}
 }
