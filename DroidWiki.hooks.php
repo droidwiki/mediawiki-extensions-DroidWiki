@@ -51,33 +51,6 @@ class DroidWikiHooks {
 			$tpl->data['bodytext'] = $adContent . $tpl->data['bodytext'];
 		}
 
-		$devDestination = Skin::makeInternalOrExternalUrl( $sk->msg( 'droidwiki-developers-url' )->inContentLanguage()->text() );
-		$devLink = Html::element(
-			'a',
-			array( 'href' => $devDestination ),
-			$sk->msg( 'droidwiki-developers' )->text()
-		);
-		$tpl->set( 'developers', $devLink );
-		$tpl->data['footerlinks']['places'][] = 'developers';
-		$cookieDestination = Skin::makeInternalOrExternalUrl( $sk->msg( 'droidwiki-imprint-url' )->inContentLanguage()->text() );
-		$cookieLink = Html::element(
-			'a',
-			array( 'href' => $cookieDestination ),
-			$sk->msg( 'droidwiki-imprint' )->text()
-		);
-		$tpl->set( 'imprint', $cookieLink );
-		$tpl->data['footerlinks']['places'][] = 'imprint';
-		return true;
-	}
-
-	/**
-	 *
-	 */
-	public static function onSkinAfterContent( &$data, Skin $sk ) {
-		if ( !self::checkShowAd( $sk, 'bottom' ) ) {
-			return;
-		}
-
 		$lockedPages = array(
 			SpecialPage::getTitleFor( 'MobileDiff' )->getRootText()
 		);
@@ -87,7 +60,7 @@ class DroidWikiHooks {
 			MobileContext::singleton()->shouldDisplayMobileView() &&
 			!in_array( $sk->getTitle()->getRootText(), $lockedPages )
 		) {
-			$sk->getOutput()->addHTML(
+			$tpl->data['bodytext'] = $tpl->data['bodytext'] .
 				Html::openElement( 'div', [ 'id' => 'ad-cat', 'class' => 'adsbygoogleCategory' ] ) .
 				Html::element(
 					'script',
@@ -112,41 +85,65 @@ class DroidWikiHooks {
 				) .
 				'(adsbygoogle = window.adsbygoogle || []).push({});' .
 				Html::closeElement( 'script' ) .
-			    Html::closeElement( 'div' )
-			);
-		} else {
-			// the desktop ad block is slightly different
-			$data = Html::openElement(
-					'div',
-					array(
-						'class' => 'adsbygoogleCategory'
-					)
-				) .
-			        Html::element(
-				        'script',
-				        array(
-					        'async',
-					        'src' => '//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js',
-				        )
-			        ) .
-			        Html::openElement(
-				        'ins',
-				        array(
-					        'class' => 'adsbygoogle',
-					        'style' => 'display:block',
-					        'data-ad-client' => 'ca-pub-4622825295514928',
-					        'data-ad-slot' => '6216454699',
-					        'data-ad-format' => 'auto',
-				        )
-			        ) .
-			        Html::closeElement( 'ins' ) .
-			        Html::openElement(
-				        'script'
-			        ) .
-			        '(adsbygoogle = window.adsbygoogle || []).push({});' .
-			        Html::closeElement( 'script' ) .
-			        Html::closeElement( 'div' );
+				Html::closeElement( 'div' );
 		}
+
+
+		$devDestination = Skin::makeInternalOrExternalUrl( $sk->msg( 'droidwiki-developers-url' )->inContentLanguage()->text() );
+		$devLink = Html::element(
+			'a',
+			array( 'href' => $devDestination ),
+			$sk->msg( 'droidwiki-developers' )->text()
+		);
+		$tpl->set( 'developers', $devLink );
+		$tpl->data['footerlinks']['places'][] = 'developers';
+		$cookieDestination = Skin::makeInternalOrExternalUrl( $sk->msg( 'droidwiki-imprint-url' )->inContentLanguage()->text() );
+		$cookieLink = Html::element(
+			'a',
+			array( 'href' => $cookieDestination ),
+			$sk->msg( 'droidwiki-imprint' )->text()
+		);
+		$tpl->set( 'imprint', $cookieLink );
+		$tpl->data['footerlinks']['places'][] = 'imprint';
+		return true;
+	}
+
+	public static function onSkinAfterContent( &$data, Skin $sk ) {
+		if ( !self::checkShowAd( $sk, 'bottom' ) ) {
+			return;
+		}
+
+		// the desktop ad block is slightly different
+		$data = Html::openElement(
+				'div',
+				array(
+					'class' => 'adsbygoogleCategory'
+				)
+			) .
+		        Html::element(
+			        'script',
+			        array(
+				        'async',
+				        'src' => '//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js',
+			        )
+		        ) .
+		        Html::openElement(
+			        'ins',
+			        array(
+				        'class' => 'adsbygoogle',
+				        'style' => 'display:block',
+				        'data-ad-client' => 'ca-pub-4622825295514928',
+				        'data-ad-slot' => '6216454699',
+				        'data-ad-format' => 'auto',
+			        )
+		        ) .
+		        Html::closeElement( 'ins' ) .
+		        Html::openElement(
+			        'script'
+		        ) .
+		        '(adsbygoogle = window.adsbygoogle || []).push({});' .
+		        Html::closeElement( 'script' ) .
+		        Html::closeElement( 'div' );
 	}
 
 	/**
