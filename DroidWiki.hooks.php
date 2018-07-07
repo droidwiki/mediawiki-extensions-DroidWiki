@@ -1,12 +1,7 @@
 <?php
 class DroidWikiHooks {
 	private static $adAlreadyAdded = false;
-	/**
-	 * SkinTemplateOutputPageBeforeExec hook handler. Adds ad to Vector skin.
-	 *
-	 * @param SkinTemplate $sk
-	 * @param QuickTemplate $tpl
-	 */
+
 	public static function onSkinTemplateOutputPageBeforeExec(
 		SkinTemplate &$sk, QuickTemplate &$tpl
 	) {
@@ -146,49 +141,39 @@ class DroidWikiHooks {
 		        Html::closeElement( 'div' );
 	}
 
-	/**
-	 * Checks whether it's allowed to show advertising banners on this page.
-	 * The check includes the actual login state of the user and the actual site requested.
-	 * You can disallow the display of ads on specific pages using the $wgNoAdSites array in
-	 * LocalSettings.php
-	 * @param boolean $showtologin Is the ad block, the check is requested from, only visible
-	 * for logged in users, set this to true, otherwise this will be false and the function gives
-	 * only true, if the user is logged out.
-	 * @return boolean
-	 */
-	private static function checkShowAd( SkinTemplate $sk, $position = 'right' ) {
+	public static function checkShowAd( SkinTemplate $sk, $position = 'right' ) {
 		global $wgNoAdSites, $wgDroidWikiAdDisallowedNamespaces, $wgDroidWikiNoAdSites;
 
-		if ( !$wgNoAdSites ) {
-			$wgDroidWikiNoAdSites = $wgNoAdSites;
+		if ( is_array( $wgNoAdSites ) ) {
+			$wgDroidWikiNoAdSites = array_merge( $wgDroidWikiNoAdSites, $wgNoAdSites );
+		}
+
+		$urlTitle = $sk->getRequest()->getText( 'title' );
+		if ( $wgDroidWikiNoAdSites && in_array( $urlTitle, $wgDroidWikiNoAdSites ) ) {
+			return false;
+		}
+
+		if ( in_array( $sk->getTitle()->getNamespace(), $wgDroidWikiAdDisallowedNamespaces ) ) {
+			return false;
+		}
+
+		if ( !$sk->getOutput()->isArticleRelated() ) {
+			return false;
 		}
 
 		$loggedIn = $sk->getUser()->isLoggedIn();
-		$urltitle = $sk->getRequest()->getText( 'title' );
-		if (
-			$wgNoAdSites &&
-			!in_array( $urltitle, $wgNoAdSites ) &&
-			!in_array( $sk->getTitle()->getNamespace(), $wgDroidWikiAdDisallowedNamespaces ) &&
-			$sk->getOutput()->isArticleRelated()
-		) {
-			switch ( $position ) {
-				case 'right':
-					return !$loggedIn;
-					break;
-				case 'bottom':
-					return $loggedIn;
-					break;
-			}
+		switch ( $position ) {
+			case 'right':
+				return !$loggedIn;
+				break;
+			case 'bottom':
+				return $loggedIn;
+				break;
+			default:
+				return false;
 		}
-		return false;
 	}
 
-	/**
-	 * BeforePageDisplay hook handler.
-	 *
-	 * @param OutputPage $out
-	 * @param SkinTemplate $sk
-	 */
 	public static function onBeforePageDisplay( OutputPage $out, Skin $sk ) {
 		$modules = array(
 			'ext.DroidWiki.adstyle.category'
@@ -227,16 +212,6 @@ class DroidWikiHooks {
 		}
 	}
 
-	/**
-	 * Override the copyright message with a nicer one.
-	 *
-	 * @param Title $title
-	 * @param string $type
-	 * @param string $msg
-	 * @param $link
-	 *
-	 * @return bool
-	 */
 	public static function onSkinCopyrightFooter( $title, $type, &$msg, &$link ) {
 		global $wgRightsUrl;
 
@@ -249,13 +224,6 @@ class DroidWikiHooks {
 		return true;
 	}
 
-	/**
-	 * PageContentLanguage hook handler. Changes the langugae object to the correct one.
-	 *
-	 * @param Title $title
-	 * @param Language &$pageLang
-	 * @param Language $userLang
-	 */
 	public static function onPageContentLanguage( Title $title, Language &$pageLang, $userLang  ) {
 		// FIXME: temporary hack for T121666, this shouldn't be needed
 		if ( strpos( $title->getText(), 'Android Training/' ) !== false ) {
