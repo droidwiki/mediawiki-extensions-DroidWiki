@@ -1,0 +1,66 @@
+{
+	"name": "DroidWiki",
+	"version": "1.0.0",
+	"author": "Florian Schmidt",
+	"url": "http://www.droidwiki.de",
+	"descriptionmsg": "droidwiki-desc",
+	"license-name": "MIT",
+	"type": "other",
+	"requires": {
+		"MediaWiki": ">= 1.29.0"
+	},
+	"MessagesDirs": {
+		"DroidWiki": [
+			"i18n"
+		]
+	},
+	"AutoloadClasses": {
+		"DroidWikiHooks": "DroidWiki.hooks.php"
+	},
+	"ResourceModules": {
+		"ext.DroidWiki.adstyle": {
+			"styles": [
+				"ext.DroidWiki.adstyle/droidwikiVectorAdStyle.less"
+			],
+			"position": "top"
+		},
+		"ext.DroidWiki.adstyle.category": {
+			"styles": [
+				"ext.DroidWiki.adstyle.category/droidwikiVectorAdStyleCategory.less"
+			],
+			"position": "top",
+			"targets": [
+				"desktop",
+				"mobile"
+			]
+		},
+		"ext.DroidWiki.mainpage.styles": {
+			"styles": [
+				"ext.DroidWiki.mainpage.styles/style.less"
+			],
+			"position": "top"
+		}
+	},
+	"ResourceFileModulePaths": {
+		"localBasePath": "resources",
+		"remoteExtPath": "DroidWiki/resources"
+	},
+	"Hooks": {
+		"SkinTemplateOutputPageBeforeExec": "DroidWikiHooks::onSkinTemplateOutputPageBeforeExec",
+		"BeforePageDisplay": "DroidWikiHooks::onBeforePageDisplay",
+		"SkinAfterContent": "DroidWikiHooks::onSkinAfterContent",
+		"SoftwareInfo": "DroidWikiHooks::onGetSoftwareInfo",
+		"SkinCopyrightFooter": "DroidWikiHooks::onSkinCopyrightFooter",
+		"PageContentLanguage": "DroidWikiHooks::onPageContentLanguage",
+		"SkinTemplateGetLanguageLink": "DroidWikiHooks::onSkinTemplateGetLanguageLink"
+	},
+	"config": {
+		"DroidWikiAdDisallowedNamespaces": {
+			"value": []
+		},
+		"DroidWikiNoAdSites": {
+			"value": []
+		}
+	},
+	"manifest_version": 2
+}
