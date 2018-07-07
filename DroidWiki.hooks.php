@@ -201,20 +201,15 @@ class DroidWikiHooks {
 			$out->addModuleStyles( 'ext.DroidWiki.mainpage.styles' );
 		}
 
-		if (
-			ExtensionRegistry::getInstance()->isLoaded( 'MobileFrontend' ) &&
-			MobileContext::singleton()->shouldDisplayMobileView()
-		) {
-			$out->addHeadItem( 'google_ad_sitelevel',
-				'<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>' );
-			$out->addHeadItem( 'google_ad_sitelevel_config',
-			'<script>
-			(adsbygoogle = window.adsbygoogle || []).push({
-				google_ad_client: "ca-pub-4622825295514928",
-				enable_page_level_ads: true
-			});
-			</script>' );
-		}
+		$out->addHeadItem( 'google_ad_sitelevel',
+			'<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>' );
+		$out->addHeadItem( 'google_ad_sitelevel_config',
+		'<script>
+		(adsbygoogle = window.adsbygoogle || []).push({
+			google_ad_client: "ca-pub-4622825295514928",
+			enable_page_level_ads: true
+		});
+		</script>' );
 	}
 
 	public static function onGetSoftwareInfo( &$software ) {
