@@ -136,7 +136,7 @@ class DroidWikiHooks {
 
 		$gitInfo = new GitInfo( "$IP/../mw-config/mw-config" );
 		if ( $gitInfo ) {
-			$software['[http://git.go2tech.de/?p=droidwiki%2Foperations%2Fmediawiki-config.git MWC]'] =
+			$software['[http://github.com/droidwiki/operations-mediawiki-config.git MWC]'] =
 				'[' . $gitInfo->getHeadViewUrl() . ' ' . substr( $gitInfo->getHeadSHA1(), 0, 7 ) .
 				']';
 		}
