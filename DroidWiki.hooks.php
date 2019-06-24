@@ -111,9 +111,7 @@ class DroidWikiHooks {
 	}
 
 	public static function onBeforePageDisplay( OutputPage $out, Skin $sk ) {
-		$skinModules = array(
-			'ext.DroidWiki.adstyle.category',
-		);
+		$skinModules = [];
 		if ( $sk->getSkinName() === 'vector' && self::checkShowAd( $sk ) ) {
 			$skinModules[] = 'ext.DroidWiki.adstyle';
 		}
@@ -121,6 +119,7 @@ class DroidWikiHooks {
 			$skinModules[] = 'ext.DroidWiki.mainpage.styles';
 		}
 		$out->addModuleStyles( $skinModules );
+		$out->addModules( [ 'ext.DroidWiki.adstyle.category' ] );
 
 		$out->addHeadItem( 'google_ad_sitelevel', self::getAdSenseScriptTag() );
 		$out->addHeadItem( 'google_ad_sitelevel_config', '<script>
