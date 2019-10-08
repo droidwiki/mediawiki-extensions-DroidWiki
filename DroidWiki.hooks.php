@@ -6,7 +6,7 @@ class DroidWikiHooks {
 	const ADSENSE_AD_CLIENT = 'ca-pub-4622825295514928';
 
 	const ADSENSE_AD_PUSH_CODE = '<script>(adsbygoogle = window.adsbygoogle || []).push({});</script>';
-	const ADSENSE_AUTOMATIC_ADS = '<script data-ad-client="' . ADSENSE_AD_CLIENT . '" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>';
+	const ADSENSE_AUTOMATIC_ADS = '<script data-ad-client="' . self::ADSENSE_AD_CLIENT . '" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>';
 
 	public static function onSkinTemplateOutputPageBeforeExec(
 		SkinTemplate &$sk, QuickTemplate &$tpl
