@@ -1,8 +1,6 @@
 <?php
 
 class DroidWikiHooks {
-	private static $adAlreadyAdded = false;
-
 	const ADSENSE_AD_CLIENT = 'ca-pub-4622825295514928';
 
 	const ADSENSE_AD_PUSH_CODE = '<script>(adsbygoogle = window.adsbygoogle || []).push({});</script>';
@@ -11,14 +9,6 @@ class DroidWikiHooks {
 	public static function onSkinTemplateOutputPageBeforeExec(
 		SkinTemplate &$sk, QuickTemplate &$tpl
 	) {
-		if (
-			!self::$adAlreadyAdded && $sk->getSkinName() === 'vector' &&
-			self::checkShowAd( $sk, 'right' )
-		) {
-			self::$adAlreadyAdded = true;
-			self::addAdCodeToBodyText( $tpl );
-		}
-
 		$lockedPages = array(
 			SpecialPage::getTitleFor( 'MobileDiff' )->getRootText(),
 		);
@@ -64,7 +54,7 @@ class DroidWikiHooks {
 	}
 
 	public static function onSkinAfterContent( &$data, Skin $sk ) {
-		if ( !self::checkShowAd( $sk, 'bottom' ) ) {
+		if ( !self::checkShowAd( $sk ) ) {
 			return;
 		}
 
@@ -78,7 +68,7 @@ class DroidWikiHooks {
 		    Html::closeElement( 'div' );
 	}
 
-	public static function checkShowAd( SkinTemplate $sk, $position = 'right' ) {
+	private static function checkShowAd( SkinTemplate $sk ) {
 		global $wgNoAdSites, $wgDroidWikiAdDisallowedNamespaces, $wgDroidWikiNoAdSites;
 
 		if ( is_array( $wgNoAdSites ) ) {
@@ -99,23 +89,12 @@ class DroidWikiHooks {
 		}
 
 		$loggedIn = $sk->getUser()->isLoggedIn();
-		switch ( $position ) {
-			case 'right':
-				return !$loggedIn;
-				break;
-			case 'bottom':
-				return $loggedIn;
-				break;
-			default:
-				return false;
-		}
+
+		return $loggedIn;
 	}
 
 	public static function onBeforePageDisplay( OutputPage $out, Skin $sk ) {
 		$skinModules = [];
-		if ( $sk->getSkinName() === 'vector' && self::checkShowAd( $sk ) ) {
-			$skinModules[] = 'ext.DroidWiki.adstyle';
-		}
 		if ( $out->getTitle()->isMainPage() ) {
 			$skinModules[] = 'ext.DroidWiki.mainpage.styles';
 		}
@@ -175,23 +154,6 @@ class DroidWikiHooks {
 		}
 
 		$languageLink['class'] .= ' interwiki-www';
-	}
-
-	private static function addAdCodeToBodyText( QuickTemplate &$tpl ) {
-		$adContent = Html::openElement( 'aside', [
-				'id' => 'adContent',
-				'class' => 'mw-body-rightcontainer',
-			] ) .
-		    self::getAdSenseScriptTag() .
-		    self::getAdSenseINSBlock(
-		    	'8031689899',
-			    null,
-			    'display:inline-block;width:160px;height:600px'
-		    ) .
-		    self::ADSENSE_AD_PUSH_CODE .
-		    Html::closeElement( 'aside' );
-
-		$tpl->data['bodytext'] = $adContent . $tpl->data['bodytext'];
 	}
 
 	private static function getAdSenseScriptTag() {
