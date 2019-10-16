@@ -4,7 +4,6 @@ class DroidWikiHooks {
 	const ADSENSE_AD_CLIENT = 'ca-pub-4622825295514928';
 
 	const ADSENSE_AD_PUSH_CODE = '<script>(adsbygoogle = window.adsbygoogle || []).push({});</script>';
-	const ADSENSE_AUTOMATIC_ADS = '<script data-ad-client="' . self::ADSENSE_AD_CLIENT . '" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>';
 
 	public static function onSkinTemplateOutputPageBeforeExec(
 		SkinTemplate &$sk, QuickTemplate &$tpl
@@ -102,7 +101,6 @@ class DroidWikiHooks {
 		$out->addModules( [ 'ext.DroidWiki.adstyle.category' ] );
 
 		$out->addHeadItem( 'google_ad_sitelevel', self::getAdSenseScriptTag() );
-		$out->addHeadItem( 'google_automatic_ads', self::ADSENSE_AUTOMATIC_ADS );
 		$out->addHeadItem( 'google_ad_sitelevel_config', '<script>
 		(adsbygoogle = window.adsbygoogle || []).push({
 			google_ad_client: "' . self::ADSENSE_AD_CLIENT . '",
