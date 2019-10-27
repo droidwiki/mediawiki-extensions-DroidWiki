@@ -2,7 +2,6 @@
 
 class DroidWikiHooks {
 	const ADSENSE_AD_CLIENT = 'ca-pub-4622825295514928';
-
 	const ADSENSE_AD_PUSH_CODE = '<script>(adsbygoogle = window.adsbygoogle || []).push({});</script>';
 
 	public static function onSkinTemplateOutputPageBeforeExec(
@@ -20,7 +19,6 @@ class DroidWikiHooks {
 			$tpl->data['bodytext'] =
 				$tpl->data['bodytext'] .
 				Html::openElement( 'div', [ 'id' => 'ad-cat', 'class' => 'adsbygoogleCategory' ] ) .
-				self::getAdSenseScriptTag() .
 				self::getAdSenseINSBlock( '6645983899', 'horizontal', 'display:block' ) .
 				self::ADSENSE_AD_PUSH_CODE . Html::closeElement( 'div' );
 		}
@@ -61,7 +59,6 @@ class DroidWikiHooks {
 		$data = Html::openElement( 'div', array(
 				'class' => 'adsbygoogleCategory',
 			) ) .
-		    self::getAdSenseScriptTag() .
 		    self::getAdSenseINSBlock( '6216454699', 'auto', 'display:block' ) .
 		    self::ADSENSE_AD_PUSH_CODE .
 		    Html::closeElement( 'div' );
@@ -93,15 +90,16 @@ class DroidWikiHooks {
 	}
 
 	public static function onBeforePageDisplay( OutputPage $out, Skin $sk ) {
-		$skinModules = [];
 		if ( $out->getTitle()->isMainPage() ) {
-			$skinModules[] = 'ext.DroidWiki.mainpage.styles';
+			$out->addModuleStyles( 'ext.DroidWiki.mainpage.styles' );
 		}
-		$out->addModuleStyles( $skinModules );
-		$out->addModules( [ 'ext.DroidWiki.adstyle.category' ] );
+		$out->addModules( 'ext.DroidWiki.adstyle.category' );
 
-		$out->addHeadItem( 'google_ad_sitelevel', self::getAdSenseScriptTag() );
-		$out->addHeadItem( 'google_ad_sitelevel_config', '<script>
+		$out->addHTML( Html::element( 'script', [
+			'async',
+			'src' => '//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js',
+		] ) );
+		$out->addHTML( '<script>
 		(adsbygoogle = window.adsbygoogle || []).push({
 			google_ad_client: "' . self::ADSENSE_AD_CLIENT . '",
 			enable_page_level_ads: true
@@ -152,13 +150,6 @@ class DroidWikiHooks {
 		}
 
 		$languageLink['class'] .= ' interwiki-www';
-	}
-
-	private static function getAdSenseScriptTag() {
-		return Html::element( 'script', [
-			'async',
-			'src' => '//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js',
-		] );
 	}
 
 	private static function getAdSenseINSBlock( $slot, $adFormat = null, $style = '' ) {
