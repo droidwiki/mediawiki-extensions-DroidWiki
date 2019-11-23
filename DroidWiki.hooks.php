@@ -10,8 +10,9 @@ class DroidWikiHooks {
 		SkinTemplate &$sk, QuickTemplate &$tpl
 	) {
 		if (
-			!self::$adAlreadyAdded && $sk->getSkinName() === 'vector' &&
-			self::checkShowAd( $sk, 'right' )
+			!self::$adAlreadyAdded &&
+			$sk->getSkinName() === 'vector' &&
+			self::shouldShowRightAdBanner( $sk )
 		) {
 			self::$adAlreadyAdded = true;
 			self::addAdCodeToBodyText( $tpl );
@@ -42,7 +43,7 @@ class DroidWikiHooks {
 		return true;
 	}
 
-	private static function checkShowAd( SkinTemplate $sk, $position = 'right' ) {
+	private static function shouldShowRightAdBanner( SkinTemplate $sk ) {
 		global $wgNoAdSites, $wgDroidWikiAdDisallowedNamespaces, $wgDroidWikiNoAdSites;
 
 		if ( is_array( $wgNoAdSites ) ) {
@@ -62,21 +63,11 @@ class DroidWikiHooks {
 			return false;
 		}
 
-		$loggedIn = $sk->getUser()->isLoggedIn();
-		switch ( $position ) {
-			case 'right':
-				return !$loggedIn;
-				break;
-			case 'bottom':
-				return $loggedIn;
-				break;
-			default:
-				return false;
-		}
+		return !( $sk->getUser()->isLoggedIn() );
 	}
 
 	public static function onBeforePageDisplay( OutputPage $out, Skin $sk ) {
-		if ( $sk->getSkinName() === 'vector' && self::checkShowAd( $sk ) ) {
+		if ( $sk->getSkinName() === 'vector' && self::shouldShowRightAdBanner( $sk ) ) {
 			$out->addModuleStyles( [ 'ext.DroidWiki.adstyle' ] );
 		}
 		$out->addModules( 'ext.DroidWiki.adstyle.category' );
