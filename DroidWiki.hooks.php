@@ -33,20 +33,6 @@ class DroidWikiHooks {
 		return true;
 	}
 
-	public static function onSkinAfterContent( &$data, Skin $sk ) {
-		if ( !self::checkShowAd( $sk ) ) {
-			return;
-		}
-
-		// the desktop ad block is slightly different
-		$data = Html::openElement( 'div', array(
-				'class' => 'adsbygoogleCategory',
-			) ) .
-		    self::getAdSenseINSBlock( '6216454699', 'auto', 'display:block' ) .
-		    self::ADSENSE_AD_PUSH_CODE .
-		    Html::closeElement( 'div' );
-	}
-
 	private static function checkShowAd( SkinTemplate $sk ) {
 		global $wgNoAdSites, $wgDroidWikiAdDisallowedNamespaces, $wgDroidWikiNoAdSites;
 

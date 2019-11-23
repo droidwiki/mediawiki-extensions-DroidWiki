@@ -39,7 +39,6 @@
 	"Hooks": {
 		"SkinTemplateOutputPageBeforeExec": "DroidWikiHooks::onSkinTemplateOutputPageBeforeExec",
 		"BeforePageDisplay": "DroidWikiHooks::onBeforePageDisplay",
-		"SkinAfterContent": "DroidWikiHooks::onSkinAfterContent",
 		"SoftwareInfo": "DroidWikiHooks::onGetSoftwareInfo",
 		"SkinCopyrightFooter": "DroidWikiHooks::onSkinCopyrightFooter",
 		"PageContentLanguage": "DroidWikiHooks::onPageContentLanguage",
