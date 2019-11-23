@@ -1,12 +1,21 @@
 <?php
 
 class DroidWikiHooks {
+	private static $adAlreadyAdded = false;
+
 	const ADSENSE_AD_CLIENT = 'ca-pub-4622825295514928';
 	const ADSENSE_AD_PUSH_CODE = '<script>(adsbygoogle = window.adsbygoogle || []).push({});</script>';
 
 	public static function onSkinTemplateOutputPageBeforeExec(
 		SkinTemplate &$sk, QuickTemplate &$tpl
 	) {
+		if (
+			!self::$adAlreadyAdded && $sk->getSkinName() === 'vector' &&
+			self::checkShowAd( $sk, 'right' )
+		) {
+			self::$adAlreadyAdded = true;
+			self::addAdCodeToBodyText( $tpl );
+		}
 		$devDestination =
 			Skin::makeInternalOrExternalUrl( $sk->msg( 'droidwiki-developers-url' )
 				->inContentLanguage()
@@ -33,7 +42,7 @@ class DroidWikiHooks {
 		return true;
 	}
 
-	private static function checkShowAd( SkinTemplate $sk ) {
+	private static function checkShowAd( SkinTemplate $sk, $position = 'right' ) {
 		global $wgNoAdSites, $wgDroidWikiAdDisallowedNamespaces, $wgDroidWikiNoAdSites;
 
 		if ( is_array( $wgNoAdSites ) ) {
@@ -54,11 +63,22 @@ class DroidWikiHooks {
 		}
 
 		$loggedIn = $sk->getUser()->isLoggedIn();
-
-		return $loggedIn;
+		switch ( $position ) {
+			case 'right':
+				return !$loggedIn;
+				break;
+			case 'bottom':
+				return $loggedIn;
+				break;
+			default:
+				return false;
+		}
 	}
 
 	public static function onBeforePageDisplay( OutputPage $out, Skin $sk ) {
+		if ( $sk->getSkinName() === 'vector' && self::checkShowAd( $sk ) ) {
+			$out->addModuleStyles( [ 'ext.DroidWiki.adstyle' ] );
+		}
 		$out->addModules( 'ext.DroidWiki.adstyle.category' );
 
 		$out->addHTML( Html::element( 'script', [
@@ -116,6 +136,30 @@ class DroidWikiHooks {
 		}
 
 		$languageLink['class'] .= ' interwiki-www';
+	}
+
+	private static function addAdCodeToBodyText( QuickTemplate &$tpl ) {
+		$adContent = Html::openElement( 'aside', [
+				'id' => 'adContent',
+				'class' => 'mw-body-rightcontainer',
+			] ) .
+		    self::getAdSenseScriptTag() .
+		    self::getAdSenseINSBlock(
+		    	'8031689899',
+			    null,
+			    'display:inline-block;width:160px;height:600px'
+		    ) .
+		    self::ADSENSE_AD_PUSH_CODE .
+		    Html::closeElement( 'aside' );
+
+		$tpl->data['bodytext'] = $adContent . $tpl->data['bodytext'];
+	}
+
+	private static function getAdSenseScriptTag() {
+		return Html::element( 'script', [
+			'async',
+			'src' => '//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js',
+		] );
 	}
 
 	private static function getAdSenseINSBlock( $slot, $adFormat = null, $style = '' ) {
