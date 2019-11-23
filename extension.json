@@ -21,24 +21,15 @@
 		"ext.DroidWiki.adstyle": {
 			"styles": [
 				"ext.DroidWiki.adstyle/droidwikiVectorAdStyle.less"
-			],
-			"position": "top"
+			]
 		},
 		"ext.DroidWiki.adstyle.category": {
 			"styles": [
 				"ext.DroidWiki.adstyle.category/droidwikiVectorAdStyleCategory.less"
 			],
-			"position": "top",
 			"targets": [
-				"desktop",
-				"mobile"
+				"desktop"
 			]
-		},
-		"ext.DroidWiki.mainpage.styles": {
-			"styles": [
-				"ext.DroidWiki.mainpage.styles/style.less"
-			],
-			"position": "top"
 		}
 	},
 	"ResourceFileModulePaths": {

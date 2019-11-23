@@ -7,23 +7,6 @@ class DroidWikiHooks {
 	public static function onSkinTemplateOutputPageBeforeExec(
 		SkinTemplate &$sk, QuickTemplate &$tpl
 	) {
-		$lockedPages = array(
-			SpecialPage::getTitleFor( 'MobileDiff' )->getRootText(),
-		);
-		// this is the mobile web ad block
-		if (
-			ExtensionRegistry::getInstance()->isLoaded( 'MobileFrontend' ) &&
-			MobileContext::singleton()->shouldDisplayMobileView() &&
-		    !in_array( $sk->getTitle()->getRootText(), $lockedPages )
-		) {
-			$tpl->data['bodytext'] =
-				$tpl->data['bodytext'] .
-				Html::openElement( 'div', [ 'id' => 'ad-cat', 'class' => 'adsbygoogleCategory' ] ) .
-				self::getAdSenseINSBlock( '6645983899', 'horizontal', 'display:block' ) .
-				self::ADSENSE_AD_PUSH_CODE . Html::closeElement( 'div' );
-		}
-
-
 		$devDestination =
 			Skin::makeInternalOrExternalUrl( $sk->msg( 'droidwiki-developers-url' )
 				->inContentLanguage()
@@ -90,9 +73,6 @@ class DroidWikiHooks {
 	}
 
 	public static function onBeforePageDisplay( OutputPage $out, Skin $sk ) {
-		if ( $out->getTitle()->isMainPage() ) {
-			$out->addModuleStyles( 'ext.DroidWiki.mainpage.styles' );
-		}
 		$out->addModules( 'ext.DroidWiki.adstyle.category' );
 
 		$out->addHTML( Html::element( 'script', [
