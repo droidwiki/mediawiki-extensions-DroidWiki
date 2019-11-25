@@ -50,15 +50,12 @@ class Advertising {
 		$adContent = Html::openElement( 'aside', [
 				'id' => 'adContent',
 				'class' => 'mw-body-rightcontainer',
-			] ) . Html::element( 'script', [
-				'async',
-				'src' => '//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js',
 			] ) . Html::element( 'ins', [
 				'class' => 'adsbygoogle',
 				'style' => 'display:inline-block;width:160px;height:600px',
 				'data-ad-client' => self::ADSENSE_AD_CLIENT,
 				'data-ad-slot' => '8031689899',
-			] ) . Html::closeElement( 'aside' );
+			] ) . self::ADSENSE_AD_PUSH_CODE . Html::closeElement( 'aside' );
 
 		$tpl->data['bodytext'] = $adContent . $tpl->data['bodytext'];
 	}
