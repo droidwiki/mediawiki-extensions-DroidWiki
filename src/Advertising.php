@@ -8,7 +8,6 @@ use QuickTemplate;
 use Skin;
 
 class Advertising {
-	const ADSENSE_AD_PUSH_CODE = '<script>(adsbygoogle = window.adsbygoogle || []).push({});</script>';
 	const ADSENSE_AD_CLIENT = 'ca-pub-4622825295514928';
 
 	private $skin;
@@ -59,13 +58,13 @@ class Advertising {
 				'style' => 'display:inline-block;width:160px;height:600px',
 				'data-ad-client' => self::ADSENSE_AD_CLIENT,
 				'data-ad-slot' => '8031689899',
-			] ) . self::ADSENSE_AD_PUSH_CODE . Html::closeElement( 'aside' );
+			] ) . Html::closeElement( 'aside' );
 
 		$tpl->data['bodytext'] = $adContent . $tpl->data['bodytext'];
-		$tpl->getSkin()->getOutput()->addModuleStyles( [ 'ext.DroidWiki.adstyle' ] );
 	}
 
 	public function setupBeforePageDisplay( OutputPage $out ) {
+		$out->addModuleStyles( [ 'ext.DroidWiki.adstyle' ] );
 		$out->addHTML( Html::element( 'script', [
 			'async',
 			'data-ad-client' => 'ca-pub-4622825295514928',
