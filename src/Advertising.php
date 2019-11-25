@@ -8,6 +8,7 @@ use QuickTemplate;
 use Skin;
 
 class Advertising {
+	const ADSENSE_AD_PUSH_CODE = '<script>(adsbygoogle = window.adsbygoogle || []).push({});</script>';
 	const ADSENSE_AD_CLIENT = 'ca-pub-4622825295514928';
 
 	private $skin;
