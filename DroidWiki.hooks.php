@@ -1,87 +1,32 @@
 <?php
 
-class DroidWikiHooks {
-	private static $adAlreadyAdded = false;
+use DroidWiki\Advertising;
+use DroidWiki\FooterLinks;
 
-	const ADSENSE_AD_CLIENT = 'ca-pub-4622825295514928';
-	const ADSENSE_AD_PUSH_CODE = '<script>(adsbygoogle = window.adsbygoogle || []).push({});</script>';
+class DroidWikiHooks {
+	private static $advertising;
 
 	public static function onSkinTemplateOutputPageBeforeExec(
 		SkinTemplate &$sk, QuickTemplate &$tpl
 	) {
-		if (
-			!self::$adAlreadyAdded &&
-			$sk->getSkinName() === 'vector' &&
-			self::shouldShowRightAdBanner( $sk )
-		) {
-			self::$adAlreadyAdded = true;
-			self::addAdCodeToBodyText( $tpl );
-		}
-		$devDestination =
-			Skin::makeInternalOrExternalUrl( $sk->msg( 'droidwiki-developers-url' )
-				->inContentLanguage()
-				->text() );
-		$devLink = Html::element(
-			'a',
-			[ 'href' => $devDestination ],
-			$sk->msg( 'droidwiki-developers' )->text()
-		);
-		$tpl->set( 'developers', $devLink );
-		$tpl->data['footerlinks']['places'][] = 'developers';
-		$cookieDestination =
-			Skin::makeInternalOrExternalUrl( $sk->msg( 'droidwiki-imprint-url' )
-				->inContentLanguage()
-				->text() );
-		$cookieLink = Html::element(
-			'a',
-			[ 'href' => $cookieDestination ],
-			$sk->msg( 'droidwiki-imprint' )->text()
-		);
-		$tpl->set( 'imprint', $cookieLink );
-		$tpl->data['footerlinks']['places'][] = 'imprint';
+		self::advertising( $sk )->rightAdBanner( $tpl );
+
+		$links = new FooterLinks();
+		$links->provideLinks( $sk, $tpl );
 
 		return true;
 	}
 
-	private static function shouldShowRightAdBanner( SkinTemplate $sk ) {
-		global $wgNoAdSites, $wgDroidWikiAdDisallowedNamespaces, $wgDroidWikiNoAdSites;
-
-		if ( is_array( $wgNoAdSites ) ) {
-			$wgDroidWikiNoAdSites = array_merge( $wgDroidWikiNoAdSites, $wgNoAdSites );
+	private static function advertising( Skin $sk ): Advertising {
+		if ( self::$advertising === null ) {
+			self::$advertising = new Advertising( $sk );
 		}
 
-		$urlTitle = $sk->getRequest()->getText( 'title' );
-		if ( $wgDroidWikiNoAdSites && in_array( $urlTitle, $wgDroidWikiNoAdSites ) ) {
-			return false;
-		}
-
-		if ( in_array( $sk->getTitle()->getNamespace(), $wgDroidWikiAdDisallowedNamespaces ) ) {
-			return false;
-		}
-
-		if ( !$sk->getOutput()->isArticleRelated() ) {
-			return false;
-		}
-
-		return !( $sk->getUser()->isLoggedIn() );
+		return self::$advertising;
 	}
 
 	public static function onBeforePageDisplay( OutputPage $out, Skin $sk ) {
-		if ( $sk->getSkinName() === 'vector' && self::shouldShowRightAdBanner( $sk ) ) {
-			$out->addModuleStyles( [ 'ext.DroidWiki.adstyle' ] );
-		}
-		$out->addModules( 'ext.DroidWiki.adstyle.category' );
-
-		$out->addHTML( Html::element( 'script', [
-			'async',
-			'src' => '//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js',
-		] ) );
-		$out->addHTML( '<script>
-		(adsbygoogle = window.adsbygoogle || []).push({
-			google_ad_client: "' . self::ADSENSE_AD_CLIENT . '",
-			enable_page_level_ads: true
-		});
-		</script>' );
+		self::advertising( $sk )->setupBeforePageDisplay( $out );
 	}
 
 	public static function onGetSoftwareInfo( &$software ) {
@@ -122,49 +67,10 @@ class DroidWikiHooks {
 	public static function onSkinTemplateGetLanguageLink(
 		&$languageLink, $languageLinkTitle, Title $title, OutputPage $out
 	) {
-		if ( strpos( $languageLink['class'], 'interwiki-de' ) === - 1 ) {
+		if ( strpos( $languageLink['class'], 'interwiki-de' ) === -1 ) {
 			return;
 		}
 
 		$languageLink['class'] .= ' interwiki-www';
-	}
-
-	private static function addAdCodeToBodyText( QuickTemplate &$tpl ) {
-		$adContent = Html::openElement( 'aside', [
-				'id' => 'adContent',
-				'class' => 'mw-body-rightcontainer',
-			] ) .
-		    self::getAdSenseScriptTag() .
-		    self::getAdSenseINSBlock(
-		    	'8031689899',
-			    null,
-			    'display:inline-block;width:160px;height:600px'
-		    ) .
-		    self::ADSENSE_AD_PUSH_CODE .
-		    Html::closeElement( 'aside' );
-
-		$tpl->data['bodytext'] = $adContent . $tpl->data['bodytext'];
-	}
-
-	private static function getAdSenseScriptTag() {
-		return Html::element( 'script', [
-			'async',
-			'src' => '//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js',
-		] );
-	}
-
-	private static function getAdSenseINSBlock( $slot, $adFormat = null, $style = '' ) {
-		$attribs = [
-			'class' => 'adsbygoogle',
-			'style' => $style,
-			'data-ad-client' => self::ADSENSE_AD_CLIENT,
-			'data-ad-slot' => $slot,
-		];
-
-		if ( $adFormat ) {
-			$attribs['data-ad-format'] = $adFormat;
-		}
-
-		return Html::element( 'ins', $attribs );
 	}
 }

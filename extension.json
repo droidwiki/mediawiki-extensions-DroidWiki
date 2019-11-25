@@ -17,6 +17,9 @@
 	"AutoloadClasses": {
 		"DroidWikiHooks": "DroidWiki.hooks.php"
 	},
+	"AutoloadNamespaces": {
+		"DroidWiki\\": "src/"
+	},
 	"ResourceModules": {
 		"ext.DroidWiki.adstyle": {
 			"styles": [
