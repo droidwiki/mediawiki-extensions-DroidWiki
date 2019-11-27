@@ -62,8 +62,10 @@ class Advertising {
 	}
 
 	public function setupBeforePageDisplay( OutputPage $out ) {
+		$out->addModuleStyles( [ 'ext.DroidWiki.adstyle' ] );
 		$out->addHTML( Html::element( 'script', [
 			'async',
+			'defer',
 			'src' => 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js',
 		] ) );
 		$out->addHTML( '<script>
