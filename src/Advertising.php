@@ -9,6 +9,7 @@ use Skin;
 
 class Advertising {
 	const ADSENSE_AD_CLIENT = 'ca-pub-4622825295514928';
+	const AD_SKINS = [ 'vector', 'timeless' ];
 
 	private $skin;
 
@@ -17,7 +18,9 @@ class Advertising {
 	}
 
 	public function rightAdBanner( QuickTemplate $template ) {
-		if ( $this->skin->getSkinName() === 'vector' && $this->shouldShowRightAdBanner() ) {
+		if ( in_array( $this->skin->getSkinName(), self::AD_SKINS ) &&
+			$this->shouldShowRightAdBanner()
+		) {
 			$this->addAdCodeToBodyText( $template );
 		}
 	}
