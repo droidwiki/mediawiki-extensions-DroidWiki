@@ -14,9 +14,6 @@
 			"i18n"
 		]
 	},
-	"AutoloadClasses": {
-		"DroidWikiHooks": "DroidWiki.hooks.php"
-	},
 	"AutoloadNamespaces": {
 		"DroidWiki\\": "src/"
 	},
@@ -40,12 +37,12 @@
 		"remoteExtPath": "DroidWiki/resources"
 	},
 	"Hooks": {
-		"SkinTemplateOutputPageBeforeExec": "DroidWikiHooks::onSkinTemplateOutputPageBeforeExec",
-		"BeforePageDisplay": "DroidWikiHooks::onBeforePageDisplay",
-		"SoftwareInfo": "DroidWikiHooks::onGetSoftwareInfo",
-		"SkinCopyrightFooter": "DroidWikiHooks::onSkinCopyrightFooter",
-		"PageContentLanguage": "DroidWikiHooks::onPageContentLanguage",
-		"SkinTemplateGetLanguageLink": "DroidWikiHooks::onSkinTemplateGetLanguageLink"
+		"SkinTemplateOutputPageBeforeExec": "DroidWiki\\Hooks::onSkinTemplateOutputPageBeforeExec",
+		"BeforePageDisplay": "DroidWiki\\Hooks::onBeforePageDisplay",
+		"SoftwareInfo": "DroidWiki\\Hooks::onGetSoftwareInfo",
+		"SkinCopyrightFooter": "DroidWiki\\Hooks::onSkinCopyrightFooter",
+		"PageContentLanguage": "DroidWiki\\Hooks::onPageContentLanguage",
+		"SkinTemplateGetLanguageLink": "DroidWiki\\Hooks::onSkinTemplateGetLanguageLink"
 	},
 	"config": {
 		"DroidWikiAdDisallowedNamespaces": {

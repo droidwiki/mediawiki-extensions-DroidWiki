@@ -10,7 +10,7 @@ use Skin;
 class FooterLinks {
 	const LINKS = [ 'developers', 'imprint' ];
 
-	public function provideLinks( IContextSource $context, QuickTemplate $template ) {
+	public function provideLinks( IContextSource $context, QuickTemplate $template ): void {
 		foreach ( self::LINKS as $linkName ) {
 			$this->provideLink( $linkName, $context, $template );
 		}
@@ -18,7 +18,7 @@ class FooterLinks {
 
 	private function provideLink(
 		string $linkName, IContextSource $context, QuickTemplate $template
-	) {
+	): void {
 		$destination =
 			Skin::makeInternalOrExternalUrl( $context->msg( "droidwiki-$linkName-url" )
 				->inContentLanguage()

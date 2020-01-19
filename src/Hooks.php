@@ -1,9 +1,16 @@
 <?php
 
-use DroidWiki\Advertising;
-use DroidWiki\FooterLinks;
+namespace DroidWiki;
 
-class DroidWikiHooks {
+use GitInfo;
+use Language;
+use OutputPage;
+use QuickTemplate;
+use Skin;
+use SkinTemplate;
+use Title;
+
+class Hooks {
 	private static $advertising;
 
 	public static function onSkinTemplateOutputPageBeforeExec(

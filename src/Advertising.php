@@ -17,15 +17,14 @@ class Advertising {
 		$this->skin = $skin;
 	}
 
-	public function rightAdBanner( QuickTemplate $template ) {
+	public function rightAdBanner( QuickTemplate $template ): void {
 		if ( in_array( $this->skin->getSkinName(), self::AD_SKINS ) &&
-			$this->shouldShowRightAdBanner()
-		) {
+			$this->shouldShowRightAdBanner() ) {
 			$this->addAdCodeToBodyText( $template );
 		}
 	}
 
-	private function shouldShowRightAdBanner() {
+	private function shouldShowRightAdBanner(): bool {
 		global $wgNoAdSites, $wgDroidWikiAdDisallowedNamespaces, $wgDroidWikiNoAdSites;
 
 		if ( is_array( $wgNoAdSites ) ) {
@@ -46,10 +45,10 @@ class Advertising {
 			return false;
 		}
 
-		return !( $this->skin->getUser()->isLoggedIn() );
+		return !$this->skin->getUser()->isLoggedIn();
 	}
 
-	private function addAdCodeToBodyText( QuickTemplate $tpl ) {
+	private function addAdCodeToBodyText( QuickTemplate $tpl ): void {
 		$adContent = Html::openElement( 'aside', [
 				'id' => 'adContent',
 				'class' => 'mw-body-rightcontainer',
@@ -64,7 +63,7 @@ class Advertising {
 		$tpl->data['bodytext'] = $adContent . $tpl->data['bodytext'];
 	}
 
-	public function setupBeforePageDisplay( OutputPage $out ) {
+	public function setupBeforePageDisplay( OutputPage $out ): void {
 		$out->addModuleStyles( [ 'ext.DroidWiki.adstyle' ] );
 		$out->addHTML( Html::element( 'script', [
 			'async',
