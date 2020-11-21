@@ -37,7 +37,6 @@
 		"remoteExtPath": "DroidWiki/resources"
 	},
 	"Hooks": {
-		"SkinTemplateOutputPageBeforeExec": "DroidWiki\\Hooks::onSkinTemplateOutputPageBeforeExec",
 		"SkinAddFooterLinks": "DroidWiki\\Hooks::onSkinAddFooterLinks",
 		"BeforePageDisplay": "DroidWiki\\Hooks::onBeforePageDisplay",
 		"SoftwareInfo": "DroidWiki\\Hooks::onGetSoftwareInfo",
