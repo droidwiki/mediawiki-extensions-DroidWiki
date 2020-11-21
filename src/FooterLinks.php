@@ -4,20 +4,23 @@ namespace DroidWiki;
 
 use Html;
 use IContextSource;
-use QuickTemplate;
 use Skin;
 
 class FooterLinks {
-	const LINKS = [ 'developers', 'imprint' ];
+	private const LINKS = [ 'developers', 'imprint' ];
 
-	public function provideLinks( IContextSource $context, QuickTemplate $template ): void {
+	public function provideLinks( Skin $skin, string $key, array &$footerlinks ): void {
+		if ( $key !== 'places' ) {
+			return;
+		}
+
 		foreach ( self::LINKS as $linkName ) {
-			$this->provideLink( $linkName, $context, $template );
+			$this->provideLink( $linkName, $skin->getContext(), $footerlinks );
 		}
 	}
 
 	private function provideLink(
-		string $linkName, IContextSource $context, QuickTemplate $template
+		string $linkName, IContextSource $context, &$footerlinks
 	): void {
 		$destination =
 			Skin::makeInternalOrExternalUrl( $context->msg( "droidwiki-$linkName-url" )
@@ -26,7 +29,6 @@ class FooterLinks {
 		$link =
 			Html::element( 'a', [ 'href' => $destination ],
 				$context->msg( "droidwiki-$linkName" )->text() );
-		$template->set( $linkName, $link );
-		$template->data['footerlinks']['places'][] = $linkName;
+		$footerlinks[$linkName] = $link;
 	}
 }

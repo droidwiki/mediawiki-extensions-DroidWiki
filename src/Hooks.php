@@ -5,21 +5,17 @@ namespace DroidWiki;
 use GitInfo;
 use Language;
 use OutputPage;
-use QuickTemplate;
 use Skin;
-use SkinTemplate;
 use Title;
 
 class Hooks {
 	private static $advertising;
 
-	public static function onSkinTemplateOutputPageBeforeExec(
-		SkinTemplate &$sk, QuickTemplate &$tpl
+	public static function onSkinAddFooterLinks(
+		Skin $skin, string $key, array &$footerlinks
 	) {
-		self::advertising( $sk )->rightAdBanner( $tpl );
-
 		$links = new FooterLinks();
-		$links->provideLinks( $sk, $tpl );
+		$links->provideLinks( $skin, $key, $footerlinks );
 
 		return true;
 	}

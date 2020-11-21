@@ -17,19 +17,8 @@ class Advertising {
 		$this->skin = $skin;
 	}
 
-	public function rightAdBanner( QuickTemplate $template ): void {
-		if ( in_array( $this->skin->getSkinName(), self::AD_SKINS ) &&
-			$this->shouldShowRightAdBanner() ) {
-			$this->addAdCodeToBodyText( $template );
-		}
-	}
-
-	private function shouldShowRightAdBanner(): bool {
-		global $wgNoAdSites, $wgDroidWikiAdDisallowedNamespaces, $wgDroidWikiNoAdSites;
-
-		if ( is_array( $wgNoAdSites ) ) {
-			$wgDroidWikiNoAdSites = array_merge( $wgDroidWikiNoAdSites, $wgNoAdSites );
-		}
+	private function shouldShowAds(): bool {
+		global $wgDroidWikiAdDisallowedNamespaces, $wgDroidWikiNoAdSites;
 
 		$urlTitle = $this->skin->getRequest()->getText( 'title' );
 		if ( $wgDroidWikiNoAdSites && in_array( $urlTitle, $wgDroidWikiNoAdSites ) ) {
@@ -48,22 +37,11 @@ class Advertising {
 		return !$this->skin->getUser()->isLoggedIn();
 	}
 
-	private function addAdCodeToBodyText( QuickTemplate $tpl ): void {
-		$adContent = Html::openElement( 'aside', [
-				'id' => 'adContent',
-				'class' => 'mw-body-rightcontainer',
-			] ) . Html::element( 'ins', [
-				'class' => 'adsbygoogle',
-				'style' => 'display:inline-block;width:160px;height:600px',
-				'data-ad-client' => self::ADSENSE_AD_CLIENT,
-				'data-ad-slot' => '8031689899',
-			] ) . '<script>(adsbygoogle = window.adsbygoogle || []).push({});</script>' .
-			Html::closeElement( 'aside' );
-
-		$tpl->data['bodytext'] = $adContent . $tpl->data['bodytext'];
-	}
-
 	public function setupBeforePageDisplay( OutputPage $out ): void {
+		if ( !$this->shouldShowAds() ) {
+			return;
+		}
+
 		$out->addModuleStyles( [ 'ext.DroidWiki.adstyle' ] );
 		$out->addHTML( Html::element( 'script', [
 			'async',
