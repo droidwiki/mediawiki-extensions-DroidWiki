@@ -76,4 +76,22 @@ class Hooks {
 
 		$languageLink['class'] .= ' interwiki-www';
 	}
+
+	public static function onOutputPageBeforeHTML( OutputPage $out, &$text ) {
+		global $wgDroidWikiGoogleAnalyticsMeasurementId;
+
+		$out->addHeadItems( [
+			'gaInitScript' => '<script async src="https://www.googletagmanager.com/gtag/js?id=' .
+				$wgDroidWikiGoogleAnalyticsMeasurementId . '"></script>',
+			'gaScript' => '
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+
+  gtag("config", "'. $wgDroidWikiGoogleAnalyticsMeasurementId . '");
+</script>
+'
+		] );
+	}
 }

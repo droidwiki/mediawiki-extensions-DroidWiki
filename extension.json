@@ -42,7 +42,8 @@
 		"SoftwareInfo": "DroidWiki\\Hooks::onGetSoftwareInfo",
 		"SkinCopyrightFooter": "DroidWiki\\Hooks::onSkinCopyrightFooter",
 		"PageContentLanguage": "DroidWiki\\Hooks::onPageContentLanguage",
-		"SkinTemplateGetLanguageLink": "DroidWiki\\Hooks::onSkinTemplateGetLanguageLink"
+		"SkinTemplateGetLanguageLink": "DroidWiki\\Hooks::onSkinTemplateGetLanguageLink",
+		"OutputPageBeforeHTML": "DroidWiki\\Hooks::onOutputPageBeforeHTML"
 	},
 	"config": {
 		"DroidWikiAdDisallowedNamespaces": {
