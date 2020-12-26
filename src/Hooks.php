@@ -78,12 +78,15 @@ class Hooks {
 	}
 
 	public static function onOutputPageBeforeHTML( OutputPage $out, &$text ) {
-		global $wgDroidWikiGoogleAnalyticsMeasurementId;
+		global $wgDroidWikiGoogleAnalyticsMeasurementId, $wgDroidWikiCloudFlareWebAnalyticsToken;
 
-		$out->addHeadItems( [
-			'gaInitScript' => '<script async src="https://www.googletagmanager.com/gtag/js?id=' .
-				$wgDroidWikiGoogleAnalyticsMeasurementId . '"></script>',
-			'gaScript' => '
+		$analyticsScripts = [];
+
+		if ( $wgDroidWikiGoogleAnalyticsMeasurementId ) {
+			$analyticsScripts = array_merge( $analyticsScripts, [
+				'gaInitScript' => '<script async src="https://www.googletagmanager.com/gtag/js?id=' .
+					$wgDroidWikiGoogleAnalyticsMeasurementId . '"></script>',
+				'gaScript' => '
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
@@ -92,6 +95,14 @@ class Hooks {
   gtag("config", "'. $wgDroidWikiGoogleAnalyticsMeasurementId . '");
 </script>
 '
-		] );
+			] );
+		}
+
+		if ( $wgDroidWikiCloudFlareWebAnalyticsToken ) {
+			$analyticsScripts['cloudflareWebAnalytics'] = '<!-- Cloudflare Web Analytics -->
+<script defer src=\'https://static.cloudflareinsights.com/beacon.min.js\' data-cf-beacon=\'{"token": "' . $wgDroidWikiCloudFlareWebAnalyticsToken . '"}\'></script>
+<!-- End Cloudflare Web Analytics -->';
+		}
+		$out->addHeadItems( $analyticsScripts );
 	}
 }
