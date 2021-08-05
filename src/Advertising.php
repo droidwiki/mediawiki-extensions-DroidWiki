@@ -34,7 +34,7 @@ class Advertising {
 			return false;
 		}
 
-		return !$this->skin->getUser()->isLoggedIn();
+		return !$this->skin->getUser()->isRegistered();
 	}
 
 	public function setupBeforePageDisplay( OutputPage $out ): void {
